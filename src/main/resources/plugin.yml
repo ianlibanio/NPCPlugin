@@ -1,0 +1,7 @@
+name: NPCPlugin
+version: '${version}'
+main: com.ianlibanio.npcplugin.NPCPlugin
+api-version: 1.17
+authors: [ Ian ]
+description: Application test plugin for Senior Team.
+website: https://minecraft.ianlibanio.com/
