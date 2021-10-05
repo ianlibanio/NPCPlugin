@@ -23,7 +23,7 @@ public class SkinFetcher {
         String texture = textureProperty.get("value").getAsString();
         String signature = textureProperty.get("signature").getAsString();
 
-        return new String[] { texture, signature };
+        return new String[]{texture, signature};
     }
 
     public String[] getDefaultSkin() {
@@ -32,7 +32,7 @@ public class SkinFetcher {
         val texture = config.getString("default-skin.texture");
         val signature = config.getString("default-skin.signature");
 
-        return new String[] { texture, signature };
+        return new String[]{texture, signature};
     }
 
 }

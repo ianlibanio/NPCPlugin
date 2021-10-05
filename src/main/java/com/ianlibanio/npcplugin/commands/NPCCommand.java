@@ -37,23 +37,24 @@ public class NPCCommand extends VoidCommand {
         val skin = args.length > 2 ? args[2] : "Steve";
 
         NPCPlugin.getInstance().getConfirmationInventory().getInventory(true, name, (accepted) -> {
-           if (accepted) {
-               val npcController = NPCPlugin.getInstance().getNpcController();
+            if (accepted) {
+                val npcController = NPCPlugin.getInstance().getNpcController();
 
-               if (npcController.getByName(name) != null) player.sendMessage(Messages.getMessage("npc-already-exists"));
+                if (npcController.getByName(name) != null)
+                    player.sendMessage(Messages.getMessage("npc-already-exists"));
 
-               npcController.createNPC(name, skin);
-               player.sendMessage(Messages.getMessage(
-                       "create-success",
-                       new ReplacementKey("name", name),
-                       new ReplacementKey("skin", skin)
-               ));
-           } else {
-               player.sendMessage(Messages.getMessage(
-                       "create-cancelled",
-                       new ReplacementKey("name", name)
-               ));
-           }
+                npcController.createNPC(name, skin);
+                player.sendMessage(Messages.getMessage(
+                        "create-success",
+                        new ReplacementKey("name", name),
+                        new ReplacementKey("skin", skin)
+                ));
+            } else {
+                player.sendMessage(Messages.getMessage(
+                        "create-cancelled",
+                        new ReplacementKey("name", name)
+                ));
+            }
         }).open(player);
     }
 

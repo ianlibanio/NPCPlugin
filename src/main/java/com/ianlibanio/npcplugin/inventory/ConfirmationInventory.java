@@ -52,6 +52,7 @@ public class ConfirmationInventory implements InventoryProvider {
     }
 
     @Override
-    public void update(Player player, InventoryContents contents) {}
+    public void update(Player player, InventoryContents contents) {
+    }
 
 }

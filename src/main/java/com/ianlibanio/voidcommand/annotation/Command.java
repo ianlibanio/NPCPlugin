@@ -12,7 +12,9 @@ import java.lang.annotation.Target;
 public @interface Command {
 
     String name();
+
     String permission() default "";
+
     String[] aliases() default {};
 
     Executor executor() default Executor.BOTH;

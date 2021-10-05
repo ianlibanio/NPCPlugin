@@ -14,7 +14,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 public abstract class NPCHelper extends JavaPlugin {
 
     public abstract void load();
+
     public abstract void enable();
+
     public abstract void disable();
 
     @Override

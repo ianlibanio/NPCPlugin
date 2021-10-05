@@ -12,7 +12,9 @@ import java.lang.annotation.Target;
 public @interface Sub {
 
     String name();
+
     String permission() default "";
+
     Executor executor() default Executor.BOTH;
 
 }

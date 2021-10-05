@@ -35,9 +35,10 @@ public class PlayerListener implements Listener {
                 val frameList = npcController.getRecordingNPC(player.getUniqueId()).getFrameList();
                 val lastFrame = frameList.get(frameList.size() - 1);
 
-                if (lastFrame.getFrameAction() == FrameAction.NONE && lastFrame.getCurrentTime() == System.currentTimeMillis()) frameList.remove(lastFrame);
+                if (lastFrame.getFrameAction() == FrameAction.NONE && lastFrame.getCurrentTime() == System.currentTimeMillis())
+                    frameList.remove(lastFrame);
 
-                npcController.getRecordingNPC(player.getUniqueId()).addFrame(new Frame(player.getLocation(), System.currentTimeMillis(),  FrameAction.HIT));
+                npcController.getRecordingNPC(player.getUniqueId()).addFrame(new Frame(player.getLocation(), System.currentTimeMillis(), FrameAction.HIT));
             }
         }
     }
@@ -50,7 +51,8 @@ public class PlayerListener implements Listener {
             val frameList = npcController.getRecordingNPC(player.getUniqueId()).getFrameList();
             val lastFrame = frameList.get(frameList.size() - 1);
 
-            if (lastFrame.getFrameAction() == FrameAction.NONE && lastFrame.getCurrentTime() == System.currentTimeMillis()) frameList.remove(lastFrame);
+            if (lastFrame.getFrameAction() == FrameAction.NONE && lastFrame.getCurrentTime() == System.currentTimeMillis())
+                frameList.remove(lastFrame);
 
             if (event.isSneaking()) {
                 npcController.getRecordingNPC(player.getUniqueId()).addFrame(new Frame(player.getLocation(), System.currentTimeMillis(), FrameAction.CROUCH));

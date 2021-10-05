@@ -36,7 +36,8 @@ public class NPCController {
 
         if (!dataFile.exists()) dataFile.createNewFile();
 
-        val type = new TypeToken<ArrayList<NPC>>() {}.getType();
+        val type = new TypeToken<ArrayList<NPC>>() {
+        }.getType();
         val reader = new JsonReader(new FileReader(dataFile));
 
         List<NPC> list = gson.fromJson(reader, type);
@@ -103,7 +104,7 @@ public class NPCController {
 
                         player.sendMessage(Messages.getMessage(
                                 "recording-time",
-                                new ReplacementKey("time",  i / 20)
+                                new ReplacementKey("time", i / 20)
                         ));
                     }
                 }
