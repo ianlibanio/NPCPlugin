@@ -16,6 +16,9 @@ messages:
   recording-now: '&eRecording now!'
   recording-ended: '&cRecording ended!'
   recording-time: '&eRecording for {time} seconds!'
-default-skin:
-  texture: 'ewogICJ0aW1lc3RhbXAiIDogMTYwNTUyODUwNjExMSwKICAicHJvZmlsZUlkIiA6ICI0YWEyYzA2M2I5NzY0YzIwYTg1OTY0MThmOWE2Y2YwNSIsCiAgInByb2ZpbGVOYW1lIiA6ICJBem9yIiwKICAic2lnbmF0dXJlUmVxdWlyZWQiIDogdHJ1ZSwKICAidGV4dHVyZXMiIDogewogICAgIlNLSU4iIDogewogICAgICAidXJsIiA6ICJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzc0OTYxYjFlYTA4MjZkNzFjYjcwOTBmZGMxMDVjODE1ZTRlYzUxZjU3YjA1NmFhNWE2NDE2MjFlYmY4MGU4MDQiCiAgICB9CiAgfQp9'
-  signature: 'pOwFSfG79W+KEJfJNiKajlQSwUCIzknvtHhZydopzf+SFKIn0K2+ZOTmJBun5NK4JN/G0S7DNmiN7iK20Blx78+f+n+ilFT138ADK4skbrDLkcDk2h5+ZgGhYuSq07SiQFax27YNL+7JlLIUDpdhKl8caB2vb5iYbjTEpLFc/g/pjci8+Pb1JTZ6U98liJZ8q3+IIu5+Seh6JhLKRUh15fhE2eKKzf4Li48LX0SOydufwYdoZ+qxWAUTwdMHJfwh9sABmqG7RiCLk4MRO12kWpRuymkvbhfd7KYVU8LS9rNBlPnwguBg9lEX36V6ojptGsG5KWpJKXL5R9qG7A0jT8acNycWrS8ARwA2pUF6BA8eaWG1aDzONAU9ScRXSsDF0IShvkJObRirmlbwLY8mIV/kOODPRURiw1q8WtCoZJrxBGzFgfTlce4VJ4vkYdjzTHNd/XRwMCh7Ekl510oZ3WbJO0Gw5Ryn4Hghka6e+GkR9EHeUzubKbIQjjm8cHu7jHEtJd2jwvlSh8G+nkFUrQuEHldRd+XgTh51TgfCy9gU80MrKxZRj9Itw0cLpLr/T3MwWqemixRg1lt4OA3aZKHYIPTanwW/CDpi7ptK2J+BFkIpYS5VLLqdcPQIFyLSQ2+yBdG9/0yUu4pfGXBMC/Kn0RgFICRRGNE6+G1jfRo='
+mysql:
+  host: 'localhost'
+  database: 'npc'
+  port: 3306
+  username: 'root'
+  password: ''

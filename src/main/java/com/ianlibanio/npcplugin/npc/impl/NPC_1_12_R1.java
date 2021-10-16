@@ -4,7 +4,6 @@ import com.ianlibanio.npcplugin.NPCPlugin;
 import com.ianlibanio.npcplugin.npc.NPCBase;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
-import lombok.val;
 import net.minecraft.server.v1_12_R1.*;
 import net.minecraft.world.entity.EntityPose;
 import org.bukkit.Bukkit;
@@ -14,31 +13,35 @@ import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_12_R1.entity.CraftPlayer;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 public class NPC_1_12_R1 implements NPCBase<EntityPlayer> {
 
     @Override
     public EntityPlayer spawn(UUID uuid, String displayName, String skinName, Location spawnLocation) {
-        val minecraftServer = ((CraftServer) Bukkit.getServer()).getServer();
+        final MinecraftServer minecraftServer = ((CraftServer) Bukkit.getServer()).getServer();
 
-        val worldServer = ((CraftWorld) Objects.requireNonNull(spawnLocation.getWorld())).getHandle();
-        val gameProfile = new GameProfile(uuid, displayName);
+        final WorldServer worldServer = ((CraftWorld) Objects.requireNonNull(spawnLocation.getWorld())).getHandle();
+        final GameProfile gameProfile = new GameProfile(uuid, displayName);
 
-        val fetcher = NPCPlugin.getInstance().getSkinFetcher();
+        final Optional<String[]> skin = NPCPlugin.getInstance().getSkinFetcher().fetchSkin(skinName);
 
-        val skin = Objects.equals(skinName, "Steve") ? fetcher.getDefaultSkin() : fetcher.getSkinFromName(skinName);
-        gameProfile.getProperties().put("textures", new Property("textures", skin[0], skin[1]));
+        if (skin.isPresent()) {
+            final String[] properties = skin.get();
 
-        val entityPlayer = new EntityPlayer(minecraftServer, worldServer, gameProfile, new PlayerInteractManager(worldServer));
+            gameProfile.getProperties().put("textures", new Property("textures", properties[0], properties[1]));
+        }
+
+        final EntityPlayer entityPlayer = new EntityPlayer(minecraftServer, worldServer, gameProfile, new PlayerInteractManager(worldServer));
         entityPlayer.setLocation(spawnLocation.getX(), spawnLocation.getY(), spawnLocation.getZ(), spawnLocation.getYaw(), spawnLocation.getPitch());
 
-        val packetPlayOutPlayerInfoAdd = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.ADD_PLAYER, entityPlayer);
-        val packetPlayOutPlayerInfoRemove = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.REMOVE_PLAYER, entityPlayer);
-        val packetPlayOutNamedEntitySpawn = new PacketPlayOutNamedEntitySpawn(entityPlayer);
+        final PacketPlayOutPlayerInfo packetPlayOutPlayerInfoAdd = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.ADD_PLAYER, entityPlayer);
+        final PacketPlayOutPlayerInfo packetPlayOutPlayerInfoRemove = new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.REMOVE_PLAYER, entityPlayer);
+        final PacketPlayOutNamedEntitySpawn packetPlayOutNamedEntitySpawn = new PacketPlayOutNamedEntitySpawn(entityPlayer);
 
         Bukkit.getOnlinePlayers().forEach(player -> {
-            val playerConnection = ((CraftPlayer) player).getHandle().playerConnection;
+            final PlayerConnection playerConnection = ((CraftPlayer) player).getHandle().playerConnection;
 
             playerConnection.sendPacket(packetPlayOutPlayerInfoAdd);
             playerConnection.sendPacket(packetPlayOutNamedEntitySpawn);
@@ -50,10 +53,10 @@ public class NPC_1_12_R1 implements NPCBase<EntityPlayer> {
 
     @Override
     public void despawn(EntityPlayer entityPlayer) {
-        val packetPlayOutEntityDestroy = new PacketPlayOutEntityDestroy(entityPlayer.getId());
+        final PacketPlayOutEntityDestroy packetPlayOutEntityDestroy = new PacketPlayOutEntityDestroy(entityPlayer.getId());
 
         Bukkit.getOnlinePlayers().forEach(player -> {
-            val playerConnection = ((CraftPlayer) player).getHandle().playerConnection;
+            final PlayerConnection playerConnection = ((CraftPlayer) player).getHandle().playerConnection;
 
             playerConnection.sendPacket(packetPlayOutEntityDestroy);
         });
@@ -61,10 +64,10 @@ public class NPC_1_12_R1 implements NPCBase<EntityPlayer> {
 
     @Override
     public void hit(EntityPlayer entityPlayer) {
-        PacketPlayOutAnimation packetPlayOutAnimation = new PacketPlayOutAnimation(entityPlayer, 0);
+        final PacketPlayOutAnimation packetPlayOutAnimation = new PacketPlayOutAnimation(entityPlayer, 0);
 
         Bukkit.getOnlinePlayers().forEach(player -> {
-            val playerConnection = ((CraftPlayer) player).getHandle().playerConnection;
+            final PlayerConnection playerConnection = ((CraftPlayer) player).getHandle().playerConnection;
 
             playerConnection.sendPacket(packetPlayOutAnimation);
         });
@@ -72,13 +75,13 @@ public class NPC_1_12_R1 implements NPCBase<EntityPlayer> {
 
     @Override
     public void crouch(EntityPlayer entityPlayer, boolean crouch) {
-        val dataWatcher = new DataWatcher(entityPlayer);
+        final DataWatcher dataWatcher = new DataWatcher(entityPlayer);
         dataWatcher.register(new DataWatcherObject<>(6, DataWatcherRegistry.a), (crouch ? EntityPose.a : EntityPose.g));
 
-        val packetPlayOutEntityMetadata = new PacketPlayOutEntityMetadata(entityPlayer.getId(), dataWatcher, true);
+        final PacketPlayOutEntityMetadata packetPlayOutEntityMetadata = new PacketPlayOutEntityMetadata(entityPlayer.getId(), dataWatcher, true);
 
         Bukkit.getOnlinePlayers().forEach(player -> {
-            val playerConnection = ((CraftPlayer) player).getHandle().playerConnection;
+            final PlayerConnection playerConnection = ((CraftPlayer) player).getHandle().playerConnection;
 
             playerConnection.sendPacket(packetPlayOutEntityMetadata);
         });
@@ -86,15 +89,15 @@ public class NPC_1_12_R1 implements NPCBase<EntityPlayer> {
 
     @Override
     public void walk(EntityPlayer entityPlayer, Location location, Location oldLocation) {
-        val x = getCoordinate(location.getX(), oldLocation.getX());
-        val y = getCoordinate(location.getY(), oldLocation.getY());
-        val z = getCoordinate(location.getZ(), oldLocation.getZ());
+        short x = getCoordinate(location.getX(), oldLocation.getX());
+        short y = getCoordinate(location.getY(), oldLocation.getY());
+        short z = getCoordinate(location.getZ(), oldLocation.getZ());
 
-        val packetPlayOutRelEntityMoveLook = new PacketPlayOutEntity.PacketPlayOutRelEntityMoveLook(entityPlayer.getId(), x, y, z, (byte) ((location.getYaw() * 256.0F) / 360.0F), (byte) location.getPitch(), true);
-        val packetPlayOutEntityHeadRotation = new PacketPlayOutEntityHeadRotation(entityPlayer, (byte) ((location.getYaw() * 256.0F) / 360.0F));
+        final PacketPlayOutEntity packetPlayOutRelEntityMoveLook = new PacketPlayOutEntity.PacketPlayOutRelEntityMoveLook(entityPlayer.getId(), x, y, z, (byte) ((location.getYaw() * 256.0F) / 360.0F), (byte) location.getPitch(), true);
+        final PacketPlayOutEntityHeadRotation packetPlayOutEntityHeadRotation = new PacketPlayOutEntityHeadRotation(entityPlayer, (byte) ((location.getYaw() * 256.0F) / 360.0F));
 
         Bukkit.getOnlinePlayers().forEach(player -> {
-            val playerConnection = ((CraftPlayer) player).getHandle().playerConnection;
+            final PlayerConnection playerConnection = ((CraftPlayer) player).getHandle().playerConnection;
 
             playerConnection.sendPacket(packetPlayOutRelEntityMoveLook);
             playerConnection.sendPacket(packetPlayOutEntityHeadRotation);
@@ -102,7 +105,7 @@ public class NPC_1_12_R1 implements NPCBase<EntityPlayer> {
     }
 
     private short getCoordinate(double newCoordinate, double oldCoordinate) {
-        val coordinate = (newCoordinate * 32 - oldCoordinate * 32) * 128;
+        double coordinate = (newCoordinate * 32 - oldCoordinate * 32) * 128;
 
         return (short) coordinate;
     }

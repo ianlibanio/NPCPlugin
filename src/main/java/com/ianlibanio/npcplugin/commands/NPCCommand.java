@@ -40,10 +40,10 @@ public class NPCCommand extends VoidCommand {
             if (accepted) {
                 val npcController = NPCPlugin.getInstance().getNpcController();
 
-                if (npcController.getByName(name) != null)
+                if (npcController.find(name) != null)
                     player.sendMessage(Messages.getMessage("npc-already-exists"));
 
-                npcController.createNPC(name, skin);
+                npcController.create(name, skin);
                 player.sendMessage(Messages.getMessage(
                         "create-success",
                         new ReplacementKey("name", name),
@@ -82,7 +82,7 @@ public class NPCCommand extends VoidCommand {
         }
 
         val npcController = NPCPlugin.getInstance().getNpcController();
-        val npc = npcController.getByName(name);
+        val npc = npcController.find(name);
 
         if (npc == null) {
             player.sendMessage(Messages.getMessage("npc-does-not-exists"));
@@ -94,7 +94,9 @@ public class NPCCommand extends VoidCommand {
                 new ReplacementKey("name", name)
         ));
 
-        npcController.startRecording(player.getUniqueId(), npc, player, seconds);
+        val recordingController = NPCPlugin.getInstance().getRecordingController();
+
+        recordingController.startRecording(player.getUniqueId(), npc, player, seconds);
     }
 
     @Sub(
@@ -116,7 +118,7 @@ public class NPCCommand extends VoidCommand {
             if (accepted) {
                 val npcController = NPCPlugin.getInstance().getNpcController();
 
-                boolean deleted = npcController.deleteNPC(name);
+                boolean deleted = npcController.delete(name);
 
                 if (deleted) {
                     player.sendMessage(Messages.getMessage(
@@ -151,7 +153,7 @@ public class NPCCommand extends VoidCommand {
         val name = args[1];
 
         val npcController = NPCPlugin.getInstance().getNpcController();
-        val npc = npcController.getByName(name);
+        val npc = npcController.find(name);
 
         if (npc == null) {
             player.sendMessage(Messages.getMessage("npc-does-not-exists"));
